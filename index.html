@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title> Elya Sport | ايليا سبورت </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --primary: #ff4d4d;
+    --secondary: #00d2ff; /* التركوازي */
+    --dark-bg: #050a14;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent: #ffd700;
+  }
+
+  * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at top, #1a2a44 0%, #050a14 100%);
+    color: #f0f0f0; margin: 0; min-height: 100vh; overflow-x: hidden;
+  }
+
+  header { padding: 60px 20px; text-align: center; }
+  header h1 { font-size: clamp(2.5rem, 8vw, 4rem); margin: 0; color: #fff; text-shadow: 0 0 20px rgba(255, 77, 77, 0.6); font-weight: 900; }
+
+  .badge-sitra { background: var(--primary); display: inline-block; padding: 6px 20px; border-radius: 50px; font-size: 0.85rem; font-weight: bold; margin-top: 15px; }
+
+  .container { max-width: 1300px; margin: -30px auto 50px; padding: 0 20px; display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
+
+  .glass-card { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 30px; }
+
+  .section-title { font-size: 1.6rem; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; border-right: 5px solid var(--primary); padding-right: 15px; }
+
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+
+  .product-item { background: rgba(255,255,255,0.03); border-radius: 22px; padding: 18px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; position: relative; }
+  .product-item img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; cursor: zoom-in; }
+  
+  .out-of-stock { opacity: 0.5; filter: grayscale(1); }
+  .sold-out-badge { position: absolute; top: 15px; left: 15px; background: #000; color: #fff; padding: 5px 12px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; border: 1px solid var(--primary); z-index: 5; }
+
+  .price-tag { color: var(--accent); font-size: 1.4rem; font-weight: 800; margin-bottom: 15px; }
+  
+  /* لون السعر التركوازي في السلة */
+  .cyan-price { color: var(--secondary); font-weight: bold; font-size: 1.1rem; }
+
+  select, input, textarea { background: rgba(0,0,0,0.4); color: white; border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; margin-bottom: 12px; width: 100%; outline: none; }
+
+  button { background: linear-gradient(90deg, var(--primary), #ff1a1a); color: white; border: none; padding: 14px; border-radius: 14px; font-weight: bold; cursor: pointer; }
+
+  .cart-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  
+  /* تنسيق الأزرار الدائري */
+  .qty-controls { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.2); padding: 5px 8px; border-radius: 50px; border: 1px solid var(--glass-border); }
+  .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+  .btn-min { background: #444; }
+  .btn-plus { background: var(--primary); }
+  .qty-val { font-weight: bold; color: #fff; min-width: 15px; text-align: center; }
+
+  .total-panel { background: var(--primary); padding: 22px; border-radius: 20px; margin: 20px 0 10px; display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 900; }
+
+  .whatsapp-btn { background: linear-gradient(90deg, #25d366, #128c7e); width: 100%; padding: 18px; animation: pulse 2s infinite; }
+
+  /* نظام التقييم */
+  .rating-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg); z-index: 10000; display: none; flex-direction: column; align-items: center; padding: 40px 20px; overflow-y: auto; }
+  .rating-item-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--glass-border); width: 100%; }
+  .stars-container { display: flex; flex-direction: row-reverse; justify-content: center; gap: 5px; margin-top: 10px; }
+  .stars-container input { display: none; }
+  .stars-container label { font-size: 1.8rem; color: #444; cursor: pointer; }
+  .stars-container input:checked ~ label { color: var(--accent); }
+  .stars-container label:hover, .stars-container label:hover ~ label { color: var(--accent); }
+  
+  .floating-review-btn { position: fixed; bottom: 20px; left: 20px; background: var(--accent); color: #000; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; z-index: 999; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+
+  .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); display:none; justify-content:center; align-items:center; z-index:9999; }
+  .lightbox img { max-width: 90%; max-height: 80%; border-radius: 10px; }
+
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+  @media(max-width:950px) { .container { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ELYA SPORT</h1>
+  <div class="badge-sitra">📍 خدمة التوصيل حصريا لمنطقة سترة</div>
+</header>
+
+<div class="container">
+  <div class="glass-card">
+    <div class="section-title"><span>🚀</span><span>المنتجات المتاحة</span></div>
+    <div id="productList" class="products-grid"></div>
+  </div>
+
+  <div class="glass-card" style="height: fit-content; position: sticky; top: 20px;">
+    <div class="section-title"><span>🛒</span><span>حقيبة التسوق</span></div>
+    <div id="cartItems"></div>
+
+    <div id="discountInfo" style="display:none; justify-content: space-between; color: var(--secondary); font-weight: bold; padding: 10px; background: rgba(0, 210, 255, 0.1); border-radius: 12px; margin-bottom: 10px;">
+        <span>خصم الكود:</span>
+        <span>-<span id="discountVal">0.000</span> د.ب</span>
+    </div>
+
+    <div class="total-panel">
+      <span>المجموع:</span>
+      <span><span id="totalPrice">0.000</span> د.ب</span>
+    </div>
+
+    <div id="promoSection" style="display: none; margin-bottom: 20px;">
+        <input type="text" id="promoCode" placeholder="كود الخصم">
+        <button onclick="applyDiscount()" style="background: var(--secondary); width: 100%;">تفعيل</button>
+    </div>
+
+    <input type="text" id="customerName" placeholder="اسم الزبون الثلاثي">
+    <select id="deliveryMethod" onchange="toggleAreaField()">
+        <option value="">-- طريقة الاستلام --</option>
+        <option value="استلام من المتجر">استلام من المتجر</option>
+        <option value="توصيل إلى المنزل">توصيل للمنزل (سترة)</option>
+    </select>
+
+    <div id="areaContainer" style="display: none;">
+      <select id="customerArea">
+        <option value="">-- اختر المنطقة في سترة --</option>
+        <option value="مهزة">مهزة</option><option value="سفالة">سفالة</option><option value="القرية">القرية</option>
+        <option value="ابو العيش">ابو العيش</option><option value="مركوبان">مركوبان</option>
+        <option value="واديان">واديان</option><option value="الخارجية">الخارجية</option>
+      </select>
+    </div>
+
+    <button class="whatsapp-btn" onclick="sendWhatsApp()">إرسال الطلب للواتساب 📲</button>
+    <button style="background:transparent; color:#ff4d4d; border:1px solid #ff4d4d; margin-top:12px; width:100%;" onclick="clearCart()">🗑️ مسح السلة</button>
+  </div>
+</div>
+
+<div class="floating-review-btn" onclick="openRatingPage()">⭐</div>
+<div id="ratingPage" class="rating-overlay">
+    <div class="glass-card" style="width: 100%; max-width: 550px;">
+        <button onclick="closeRatingPage()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer; float:left;">✕ إغلاق</button>
+        <h2 style="text-align: center; color: var(--accent);">تقييم المنتجات 🌟</h2>
+        <div id="ratingItemsList" style="margin: 20px 0;"></div>
+        <textarea id="overallReview" placeholder="ملاحظات إضافية عن الطلب..."></textarea>
+        <button onclick="sendReview()" style="width: 100%; background: var(--secondary);">إرسال التقييم الشامل ✅</button>
+    </div>
+</div>
+
+<div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lightboxImg"></div>
+
+<script>
+const products = [
+  {id:1, name:'أكمام يد', price:0.700, image:'https://cdn.salla.sa/PzDYB/qdBDNw8fdDJGCbuoN3MzORIYoOdxNbAG6jee7EVQ.jpg', available: true},
+  {id:2, name:'حقيبة رياضية', price:1.000, image:'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRmlDrMSUEejGzptNGqlve8bW28dxCoR7LmFJEMPX2QTotmwvtdI07Ajm4O0FgPGueNMARu96UdD8aKJfFvJvnD7_0rblznFrivFMTWB8cQvXMEkKZCO7VNLEV9v9M9Cbj0t8a-0g&usqp=CAc', available: true},
+  {id:3, name:'جوارب سلكون سوداء', price:0.700, image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRddn7OzUWHI-Cut_3x-p6A3VNEv5Emp_4myw&s', available: true},
+  {id:4, name:'جوارب سلكون بيضاء', price:0.700, image:'https://ae01.alicdn.com/kf/S4468a72f368540cc9e08759793c74b500.jpg', available: true},
+  {id:5, name:'قفازات قطنية', price:0.700, image:'https://tse2.mm.bing.net/th/id/OIP.fM4jK2UmSh2E9zZnUd7LhwHaLH?pid=Api', available: true},
+  {id:6, name:'لف رياضي', price:0, image:'https://img.kwcdn.com/product/Fancyalgo/VirtualModelMatting/1361cc60b226a89db028441ace1ef037.jpg', available: true,
+    sizes:[ {name:'صغير', price:0.100}, {name:'متوسط', price:0.150}, {name:'كبير', price:0.200} ]},
+  {id:7, name:'كسارة', price:0.700, image:'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSw0ypEAcatNvlgpvqXJvIY083Do3H_vRe4T_LDo7xdMVER-0uzd1aYPkxVA8BFW-NgtFQrSncVJuaaurFQOWtn5Eo6jQS_-hFFeNOgZ__3', available: false},
+  {id:8, name:'جهاز تقوية التنفس', price:0.700, image:'https://img.kwcdn.com/product/fancy/b48c54cf-7446-4fb6-925f-041d31ddf39c.jpg', available: true},
+];
+
+let cart = [];
+let discountPercent = 0;
+let lastPurchasedItems = JSON.parse(localStorage.getItem('lastOrder')) || [];
+
+function displayProducts() {
+  const list = document.getElementById('productList');
+  list.innerHTML = products.map(p => `
+    <div class="product-item ${!p.available ? 'out-of-stock' : ''}">
+      ${!p.available ? '<div class="sold-out-badge">غير متوفر حالياً</div>' : ''}
+      <img src="${p.image}" onclick="openLightbox('${p.image}')">
+      <h4>${p.name}</h4>
+      <div class="price-tag">${p.price ? p.price.toFixed(3) + ' د.ب' : 'حدد الحجم'}</div>
+      ${p.sizes ? `<select id="size-${p.id}">${p.sizes.map(s => `<option value="${s.price}">${s.name} - ${s.price.toFixed(3)}</option>`).join('')}</select>` : '<div style="height:55px"></div>'}
+      <button onclick="addToCart(${p.id})" ${!p.available ? 'disabled' : ''}>${p.available ? 'أضف للسلة +' : 'نفدت الكمية'}</button>
+    </div>
+  `).join('');
+}
+
+function addToCart(id) {
+  const product = products.find(p => p.id === id);
+  if(!product.available) return;
+  let price = product.price;
+  let size = '';
+  if(product.sizes) {
+    const sel = document.getElementById(`size-${id}`);
+    price = parseFloat(sel.value);
+    size = sel.options[sel.selectedIndex].text.split('-')[0].trim();
+  }
+  const existing = cart.find(c => c.id === id && c.size === size);
+  if(existing) existing.qty++; else cart.push({...product, price, size, qty:1});
+  updateCart();
+}
+
+function changeQty(i, d) {
+  cart[i].qty += d;
+  if(cart[i].qty <= 0) cart.splice(i,1);
+  updateCart();
+}
+
+function updateCart() {
+  const container = document.getElementById('cartItems');
+  let subtotal = 0;
+  if(cart.length === 0) {
+    container.innerHTML = '<p style="text-align:center; opacity:0.4; padding: 20px;">السلة فارغة، ابدأ التسوق الآن!</p>';
+  } else {
+    container.innerHTML = cart.map((item, i) => {
+      subtotal += item.price * item.qty;
+      return `<div class="cart-item">
+          <div><strong>${item.name}</strong><br><small>${item.size ? 'حجم: '+item.size : ''} | <span class="cyan-price">${(item.price).toFixed(3)} د.ب</span></small></div>
+          <div class="qty-controls">
+            <button class="qty-btn btn-min" onclick="changeQty(${i},-1)">-</button>
+            <span class="qty-val">${item.qty}</span>
+            <button class="qty-btn btn-plus" onclick="changeQty(${i},1)">+</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  document.getElementById('promoSection').style.display = subtotal >= 3 ? 'block' : 'none';
+  const disc = subtotal * discountPercent;
+  document.getElementById('discountInfo').style.display = disc > 0 ? 'flex' : 'none';
+  document.getElementById('discountVal').textContent = disc.toFixed(3);
+  document.getElementById('totalPrice').textContent = (subtotal - disc).toFixed(3);
+}
+
+function applyDiscount() {
+    const code = document.getElementById('promoCode').value;
+    if(code === 'Elya313') discountPercent = 0.10;
+    else if(code === 'SP03') discountPercent = 0.15;
+    else return alert("الكود غير صحيح");
+    updateCart();
+}
+
+function sendWhatsApp() {
+  const name = document.getElementById('customerName').value.trim();
+  const method = document.getElementById('deliveryMethod').value;
+  const area = document.getElementById('customerArea').value;
+  
+  if(!cart.length || !name || !method) return alert('يرجى إكمال جميع البيانات (الاسم وطريقة الاستلام)');
+
+  lastPurchasedItems = [...cart];
+  localStorage.setItem('lastOrder', JSON.stringify(lastPurchasedItems));
+
+  // بداية الرسالة بتنسيق جميل
+  let msg = `✨ *طلب شراء جديد - ELYA SPORT* ✨\n\n`;
+  msg += `👤 *الزبون:* ${name}\n`;
+  msg += `📍 *الاستلام:* ${method} ${area ? '⬅️ ' + area : ''}\n`;
+  msg += `📅 *التاريخ:* ${new Date().toLocaleDateString('ar-BH')}\n`;
+  msg += `\n📦 *تفاصيل المنتجات:*\n`;
+  msg += `───━━━━─━━━━───\n`;
+
+  cart.forEach((item, index) => {
+    const itemTotal = (item.price * item.qty).toFixed(3);
+    msg += `${index + 1}. 🏷️ *${item.name}*\n`;
+    if(item.size) msg += `   ▫️ الحجم: ${item.size}\n`;
+    msg += `   ▫️ الكمية: ${item.qty} \n`;
+    msg += `   💰 السعر: ${itemTotal} د.ب\n\n`;
+  });
+
+  msg += `───━━━━─━━━━───\n`;
+  
+  // الخصم إن وجد
+  const disc = parseFloat(document.getElementById('discountVal').textContent);
+  if(disc > 0) {
+    msg += `🧧 خصم الكود: -${disc.toFixed(3)} د.ب\n`;
+  }
+
+  // المجموع النهائي
+  msg += `💵 *المجموع النهائي: ${document.getElementById('totalPrice').textContent} د.ب*\n\n`;
+  
+  // الخاتمة المطلوبة
+  msg += `⚠️ *يرجى التقييم بعد الاستلام عبر الضغط على زر (⭐) في الموقع*\n`;
+  msg += `شكراً لثقتكم بـ ايليا سبورت! ❤️`;
+
+  window.open(`https://wa.me/97339711178?text=${encodeURIComponent(msg)}`);
+}
+
+function openRatingPage() {
+    const list = document.getElementById('ratingItemsList');
+    if(lastPurchasedItems.length === 0) {
+        list.innerHTML = "<p style='color:#ff4d4d; text-align:center;'>لا يوجد سجل مشتريات لتقييمها حالياً.</p>";
+    } else {
+        list.innerHTML = lastPurchasedItems.map((item, idx) => `
+            <div class="rating-item-card">
+                <div style="text-align:center;"><strong>${item.name}</strong></div>
+                <div class="stars-container">
+                    <input type="radio" name="star-prod-${idx}" id="s5-${idx}" value="5"><label for="s5-${idx}">★</label>
+                    <input type="radio" name="star-prod-${idx}" id="s4-${idx}" value="4"><label for="s4-${idx}">★</label>
+                    <input type="radio" name="star-prod-${idx}" id="s3-${idx}" value="3"><label for="s3-${idx}">★</label>
+                    <input type="radio" name="star-prod-${idx}" id="s2-${idx}" value="2"><label for="r2-${idx}">★</label>
+                    <input type="radio" name="star-prod-${idx}" id="s1-${idx}" value="1"><label for="s1-${idx}">★</label>
+                </div>
+            </div>
+        `).join('');
+    }
+    document.getElementById('ratingPage').style.display = 'flex';
+}
+
+function sendReview() {
+    if(lastPurchasedItems.length === 0) return alert("لا يوجد منتجات لتقييمها");
+    
+    let report = `*تقييم مشتريات ELYA SPORT*\n──────────────\n`;
+    let itemsEvaluated = 0;
+    
+    lastPurchasedItems.forEach((item, idx) => {
+        const ratingValue = document.querySelector(`input[name="star-prod-${idx}"]:checked`)?.value;
+        const ratingStr = ratingValue ? "⭐".repeat(ratingValue) : "بدون تقييم";
+        if(ratingValue) itemsEvaluated++;
+        report += `• ${item.name}: ${ratingStr}\n`;
+    });
+
+    if(itemsEvaluated === 0) return alert("يرجى اختيار التقييم بالنجوم أولاً");
+
+    const note = document.getElementById('overallReview').value;
+    if(note) report += `──────────────\nملاحظات: ${note}`;
+
+    // فتح واتساب لإرسال التقرير
+    window.open(`https://wa.me/97339711178?text=${encodeURIComponent(report)}`);
+
+    // --- التعديل المطلوب: حذف البيانات بعد الإرسال ---
+    lastPurchasedItems = []; // تفريغ المصفوفة في المتصفح
+    localStorage.removeItem('lastOrder'); // حذف السجل من ذاكرة الجهاز
+    document.getElementById('ratingItemsList').innerHTML = ""; // مسح القائمة من الشاشة
+    document.getElementById('overallReview').value = ""; // مسح الملاحظات
+    
+    closeRatingPage();
+    alert("شكراً لك! تم إرسال التقييم.");
+}
+
+function closeRatingPage() { document.getElementById('ratingPage').style.display = 'none'; }
+function toggleAreaField() { document.getElementById('areaContainer').style.display = document.getElementById('deliveryMethod').value === 'توصيل إلى المنزل' ? 'block' : 'none'; }
+function openLightbox(u) { document.getElementById('lightboxImg').src=u; document.getElementById('lightbox').style.display='flex'; }
+function clearCart() { if(confirm('مسح السلة؟')) { cart=[]; discountPercent=0; updateCart(); } }
+
+displayProducts();
+updateCart();
+</script>
+</body>
+</html>
