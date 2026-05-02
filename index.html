@@ -247,7 +247,11 @@ const products = [
     {id:4, name:'جوارب سلكون بيضاء', price:0.700, image:'products/4.jpg', available: true},
     {id:5, name:'قفازات قطنية', price:0.700, image:'products/5.jpg', available: true},
     {id:6, name:'لف رياضي', price:0, image:'products/6.jpg', available: true,
-        sizes:[ {name:'صغير', price:0.100}, {name:'متوسط', price:0.150}, {name:'كبير', price:0.200} ]},
+        sizes:[ 
+            {name:'صغير', price:0.150, outOfStock: false}, 
+            {name:'متوسط (نفد)', price:0.200, outOfStock: true}, 
+            {name:'كبير', price:0.250, outOfStock: false} 
+        ]},
     {id:7, name:'كسارة', price:0.700, image:'products/7.jpg', available: false},
     {id:8, name:'جهاز تقوية التنفس', price:0.700, image:'products/8.jpg', available: true},
 ];
@@ -264,7 +268,14 @@ function displayProducts() {
             <img src="${p.image}" onclick="openLightbox('${p.image}')">
             <h4>${p.name}</h4>
             <div class="price-tag">${p.price ? p.price.toFixed(3) + ' د.ب' : 'حدد الحجم'}</div>
-            ${p.sizes ? `<select id="size-${p.id}">${p.sizes.map(s => `<option value="${s.price}">${s.name} - ${s.price.toFixed(3)}</option>`).join('')}</select>` : '<div style="height:55px"></div>'}
+            ${p.sizes ? `
+                <select id="size-${p.id}">
+                    ${p.sizes.map(s => `
+                        <option value="${s.price}" ${s.outOfStock ? 'disabled' : ''}>
+                            ${s.name} ${s.outOfStock ? '- غير متوفر' : '- ' + s.price.toFixed(3)}
+                        </option>
+                    `).join('')}
+                </select>` : '<div style="height:55px"></div>'}
             <button onclick="addToCart(${p.id})" ${!p.available ? 'disabled' : ''}>${p.available ? 'أضف للسلة +' : 'نفدت'}</button>
         </div>
     `).join('');
