@@ -357,6 +357,30 @@ function updateCart() {
 }
 
 
+function applyDiscount() {
+    const code = document.getElementById('promoCode').value.trim().toUpperCase();
+    
+    // تعريف الأكواد ونسبة الخصم (0.10 تعني 10%)
+
+ if (code === "SP03") {
+        discountPercent = 0.15;
+        alert("تم تفعيل خصم 15% بنجاح! 🎉");    
+        
+    } else if (code === "SP08") {
+        discountPercent = 0.20;
+        alert("تم تفعيل خصم 20% بنجاح! 🎉"); 
+
+    } else if (code === "") {
+        alert("يرجى إدخال كود الخصم");
+        return;
+    } else {
+        alert("عذراً، هذا الكود غير صحيح ❌");
+        discountPercent = 0;
+    }
+    
+    updateCart(); // تحديث السلة لإظهار السعر الجديد بعد الخصم
+}
+
 function openRatingPage() {
     const list = document.getElementById('ratingItemsList');
     const items = JSON.parse(localStorage.getItem('lastOrder')) || [];
