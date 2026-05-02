@@ -332,7 +332,6 @@ function updateCart() {
                 <div class="cart-item-header">
                     <div class="cart-item-details">
                         <strong>${item.name}</strong>
-                        <small>${item.size ? 'المقاس: ' + item.size : 'منتج أساسي'}</small>
                     </div>
                     <div class="cyan-price">${(item.price * item.qty).toFixed(3)} د.ب</div>
                 </div>
@@ -377,7 +376,49 @@ function openRatingPage() {
     `).join('');
     document.getElementById('ratingPage').style.display = 'flex';
 }
+// --- استبدل دالة sendWhatsApp بهذه الدالة المحدثة ---
 
+function sendWhatsApp() {
+    if (cart.length === 0) {
+        alert("السلة فارغة!");
+        return;
+    }
+
+    const name = document.getElementById('customerName').value;
+    const method = document.getElementById('deliveryMethod').value;
+    const area = document.getElementById('customerArea').value;
+
+    if (!name || !method) {
+        alert("يرجى إكمال بيانات الاسم وطريقة الاستلام");
+        return;
+    }
+
+    if (method === 'توصيل إلى المنزل' && !area) {
+        alert("يرجى اختيار المنطقة في سترة");
+        return;
+    }
+
+    let message = `*طلب جديد من متجر ELYA SPORT*%0A%0A`;
+    message += `*الاسم:* ${name}%0A`;
+    message += `*طريقة الاستلام:* ${method}%0A`;
+    if (area) message += `*المنطقة:* ${area}%0A`;
+    message += `--------------------------%0A`;
+
+    cart.forEach(item => {
+        message += `• ${item.name} ${item.size ? '(' + item.size + ')' : ''}%0A`;
+        message += `   الكمية: ${item.qty} | السعر: ${(item.price * item.qty).toFixed(3)} د.ب%0A`;
+    });
+
+    const total = document.getElementById('totalPrice').textContent;
+    message += `--------------------------%0A`;
+    message += `*المجموع النهائي: ${total} د.ب*`;
+
+    // حفظ الطلب للتقييم لاحقاً
+    localStorage.setItem('lastOrder', JSON.stringify(cart));
+
+    // فتح واتساب (تأكد من كتابة الرقم بدون أصفار في البداية)
+    window.open(`https://wa.me/97339711178?text=${message}`);
+}
 function sendReview() {
     const items = JSON.parse(localStorage.getItem('lastOrder')) || [];
     let report = `*تقييم مشتريات ELYA SPORT*\n`;
