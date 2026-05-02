@@ -53,8 +53,47 @@
 
         button { background: linear-gradient(90deg, var(--primary), #ff1a1a); color: white; border: none; padding: 14px; border-radius: 14px; font-weight: bold; cursor: pointer; }
 
-        .cart-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        
+/* تنسيق بطاقات السلة */
+.cart-item {
+    background: rgba(255, 255, 255, 0.07);
+    padding: 15px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column; /* جعل المحتوى فوق بعضه في البطاقة */
+    gap: 12px;
+    border: 1px solid var(--glass-border);
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* ترتيب العناصر داخل بطاقة المنتج في السلة */
+.cart-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.cart-item-details strong {
+    display: block;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.cart-item-details small {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* شريط التحكم في الكمية والسعر أسفل البطاقة */
+.cart-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 10px;
+}        
         .qty-controls { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.2); padding: 5px 8px; border-radius: 50px; border: 1px solid var(--glass-border); }
         .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .btn-min { background: #444; }
@@ -100,11 +139,39 @@
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); display:none; justify-content:center; align-items:center; z-index:9999; }
         .lightbox img { max-width: 90%; max-height: 80%; border-radius: 10px; }
 
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+     
+		@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+		/* رسالة التنبيه التي تظهر في الأسفل */
+#toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--secondary);
+    color: #000;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
+    z-index: 10001;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* تأثير اهتزاز خفيف للزر عند الضغط */
+.btn-clicked {
+    transform: scale(0.9);
+    filter: brightness(1.2);
+}
     </style>
 </head>
 <body>
-
+<div id="toast">تمت إضافة المنتج للسلة بنجاح! 🛒</div>
 <header>
     <h1>ELYA SPORT</h1>
     <div class="badge-sitra">📍 خدمة التوصيل حصرياً لمنطقة سترة</div>
@@ -206,16 +273,32 @@ function displayProducts() {
 function addToCart(id) {
     const product = products.find(p => p.id === id);
     if(!product.available) return;
+    
     let price = product.price;
     let size = '';
+    
     if(product.sizes) {
         const sel = document.getElementById(`size-${id}`);
         price = parseFloat(sel.value);
         size = sel.options[sel.selectedIndex].text.split('-')[0].trim();
     }
+    
     const existing = cart.find(c => c.id === id && c.size === size);
     if(existing) existing.qty++; else cart.push({...product, price, size, qty:1});
+    
     updateCart();
+
+    // --- إضافة التأثيرات البصرية هنا ---
+    
+    // 1. إظهار رسالة التنبيه (Toast)
+    const toast = document.getElementById('toast');
+    toast.className = "show";
+    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2500);
+
+    // 2. تأثير الضغط على الزر (تغيير مظهر الزر لحظياً)
+    const btn = event.target;
+    btn.classList.add('btn-clicked');
+    setTimeout(() => { btn.classList.remove('btn-clicked'); }, 200);
 }
 
 function changeQty(i, d) {
@@ -227,78 +310,40 @@ function changeQty(i, d) {
 function updateCart() {
     const container = document.getElementById('cartItems');
     let subtotal = 0;
+    
     if(cart.length === 0) {
         container.innerHTML = '<p style="text-align:center; opacity:0.4; padding: 20px;">السلة فارغة، ابدأ التسوق الآن!</p>';
     } else {
         container.innerHTML = cart.map((item, i) => {
             subtotal += item.price * item.qty;
-            return `<div class="cart-item">
-                <div><strong>${item.name}</strong><br><small>${item.size ? item.size : ''} | <span class="cyan-price">${(item.price).toFixed(3)}</span></small></div>
-                <div class="qty-controls">
-                    <button class="qty-btn btn-min" onclick="changeQty(${i},-1)">-</button>
-                    <span class="qty-val">${item.qty}</span>
-                    <button class="qty-btn btn-plus" onclick="changeQty(${i},1)">+</button>
+            return `
+            <div class="cart-item">
+                <div class="cart-item-header">
+                    <div class="cart-item-details">
+                        <strong>${item.name}</strong>
+                        <small>${item.size ? 'المقاس: ' + item.size : 'منتج أساسي'}</small>
+                    </div>
+                    <div class="cyan-price">${(item.price * item.qty).toFixed(3)} د.ب</div>
+                </div>
+                
+                <div class="cart-item-footer">
+                    <div class="qty-controls">
+                        <button class="qty-btn btn-min" onclick="changeQty(${i},-1)">-</button>
+                        <span class="qty-val">${item.qty}</span>
+                        <button class="qty-btn btn-plus" onclick="changeQty(${i},1)">+</button>
+                    </div>
+                    <small style="opacity: 0.6;">سعر الحبة: ${item.price.toFixed(3)}</small>
                 </div>
             </div>`;
         }).join('');
     }
+    
+    // تحديث بقية العناصر (الخصم والمجموع) كما هي
     document.getElementById('promoSection').style.display = subtotal >= 3 ? 'block' : 'none';
     const disc = subtotal * discountPercent;
     document.getElementById('discountVal').textContent = disc.toFixed(3);
     document.getElementById('discountInfo').style.display = disc > 0 ? 'flex' : 'none';
     document.getElementById('totalPrice').textContent = (subtotal - disc).toFixed(3);
-}
-
-function applyDiscount() {
-    const code = document.getElementById('promoCode').value;
-    if(code === 'Elya313') discountPercent = 0.10;
-    else if(code === 'SP03') discountPercent = 0.15;
-    else return alert("كود خاطئ");
-    updateCart();
-}
-
-function sendWhatsApp() {
-  const name = document.getElementById('customerName').value.trim();
-  const method = document.getElementById('deliveryMethod').value;
-  const area = document.getElementById('customerArea').value;
-  
-  if(!cart.length || !name || !method) return alert('يرجى إكمال جميع البيانات (الاسم وطريقة الاستلام)');
-
-  lastPurchasedItems = [...cart];
-  localStorage.setItem('lastOrder', JSON.stringify(lastPurchasedItems));
-
-  // بداية الرسالة بتنسيق جميل
-  let msg = `✨ *طلب شراء جديد - ELYA SPORT* ✨\n\n`;
-  msg += `👤 *الزبون:* ${name}\n`;
-  msg += `📍 *الاستلام:* ${method} ${area ? '⬅️ ' + area : ''}\n`;
-  msg += `📅 *التاريخ:* ${new Date().toLocaleDateString('ar-BH')}\n`;
-  msg += `\n📦 *تفاصيل المنتجات:*\n`;
-  msg += `───━━━━─━━━━───\n`;
-
-  cart.forEach((item, index) => {
-    const itemTotal = (item.price * item.qty).toFixed(3);
-    msg += `${index + 1}. 🏷️ *${item.name}*\n`;
-    if(item.size) msg += `   ▫️ الحجم: ${item.size}\n`;
-    msg += `   ▫️ الكمية: ${item.qty} \n`;
-    msg += `   💰 السعر: ${itemTotal} د.ب\n\n`;
-  });
-
-  msg += `───━━━━─━━━━───\n`;
-  
-  // الخصم إن وجد
-  const disc = parseFloat(document.getElementById('discountVal').textContent);
-  if(disc > 0) {
-    msg += `🧧 خصم الكود: -${disc.toFixed(3)} د.ب\n`;
-  }
-
-  // المجموع النهائي
-  msg += `💵 *المجموع النهائي: ${document.getElementById('totalPrice').textContent} د.ب*\n\n`;
-  
-  // الخاتمة المطلوبة
-  msg += `⚠️ *يرجى التقييم بعد الاستلام عبر الضغط على زر (⭐) في الموقع*\n`;
-  msg += `شكراً لثقتكم بـ ايليا سبورت! ❤️`;
-
-  window.open(`https://wa.me/97339711178?text=${encodeURIComponent(msg)}`);
 }
 
 
