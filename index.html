@@ -379,45 +379,47 @@ function openRatingPage() {
 // --- استبدل دالة sendWhatsApp بهذه الدالة المحدثة ---
 
 function sendWhatsApp() {
-    if (cart.length === 0) {
-        alert("السلة فارغة!");
-        return;
-    }
+  const name = document.getElementById('customerName').value.trim();
+  const method = document.getElementById('deliveryMethod').value;
+  const area = document.getElementById('customerArea').value;
+  
+  if(!cart.length || !name || !method) return alert('يرجى إكمال جميع البيانات (الاسم وطريقة الاستلام)');
 
-    const name = document.getElementById('customerName').value;
-    const method = document.getElementById('deliveryMethod').value;
-    const area = document.getElementById('customerArea').value;
+  lastPurchasedItems = [...cart];
+  localStorage.setItem('lastOrder', JSON.stringify(lastPurchasedItems));
 
-    if (!name || !method) {
-        alert("يرجى إكمال بيانات الاسم وطريقة الاستلام");
-        return;
-    }
+  // بداية الرسالة بتنسيق جميل
+  let msg = `✨ *طلب شراء جديد - ELYA SPORT* ✨\n\n`;
+  msg += `👤 *الزبون:* ${name}\n`;
+  msg += `📍 *الاستلام:* ${method} ${area ? '⬅️ ' + area : ''}\n`;
+  msg += `📅 *التاريخ:* ${new Date().toLocaleDateString('ar-BH')}\n`;
+  msg += `\n📦 *تفاصيل المنتجات:*\n`;
+  msg += `───━━━━─━━━━───\n`;
 
-    if (method === 'توصيل إلى المنزل' && !area) {
-        alert("يرجى اختيار المنطقة في سترة");
-        return;
-    }
+  cart.forEach((item, index) => {
+    const itemTotal = (item.price * item.qty).toFixed(3);
+    msg += `${index + 1}. 🏷️ *${item.name}*\n`;
+    if(item.size) msg += `   ▫️ الحجم: ${item.size}\n`;
+    msg += `   ▫️ الكمية: ${item.qty} \n`;
+    msg += `   💰 السعر: ${itemTotal} د.ب\n\n`;
+  });
 
-    let message = `*طلب جديد من متجر ELYA SPORT*%0A%0A`;
-    message += `*الاسم:* ${name}%0A`;
-    message += `*طريقة الاستلام:* ${method}%0A`;
-    if (area) message += `*المنطقة:* ${area}%0A`;
-    message += `--------------------------%0A`;
+  msg += `───━━━━─━━━━───\n`;
+  
+  // الخصم إن وجد
+  const disc = parseFloat(document.getElementById('discountVal').textContent);
+  if(disc > 0) {
+    msg += `🧧 خصم الكود: -${disc.toFixed(3)} د.ب\n`;
+  }
 
-    cart.forEach(item => {
-        message += `• ${item.name} ${item.size ? '(' + item.size + ')' : ''}%0A`;
-        message += `   الكمية: ${item.qty} | السعر: ${(item.price * item.qty).toFixed(3)} د.ب%0A`;
-    });
+  // المجموع النهائي
+  msg += `💵 *المجموع النهائي: ${document.getElementById('totalPrice').textContent} د.ب*\n\n`;
+  
+  // الخاتمة المطلوبة
+  msg += `⚠️ *يرجى التقييم بعد الاستلام عبر الضغط على زر (⭐) في الموقع*\n`;
+  msg += `شكراً لثقتكم بـ ايليا سبورت! ❤️`;
 
-    const total = document.getElementById('totalPrice').textContent;
-    message += `--------------------------%0A`;
-    message += `*المجموع النهائي: ${total} د.ب*`;
-
-    // حفظ الطلب للتقييم لاحقاً
-    localStorage.setItem('lastOrder', JSON.stringify(cart));
-
-    // فتح واتساب (تأكد من كتابة الرقم بدون أصفار في البداية)
-    window.open(`https://wa.me/97339711178?text=${message}`);
+  window.open(`https://wa.me/97339711178?text=${encodeURIComponent(msg)}`);
 }
 function sendReview() {
     const items = JSON.parse(localStorage.getItem('lastOrder')) || [];
