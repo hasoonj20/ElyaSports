@@ -252,8 +252,15 @@ const products = [
             {name:'متوسط', price:0.200, outOfStock: true}, 
             {name:'كبير', price:0.250, outOfStock: false} 
         ]},
-    {id:7, name:'كسارة', price:0.700, image:'products/7.jpg', available: false},
+    {id:7,name:'كسارة',price:0,image:'products/7.jpg',available: true,
+    sizes:[
+        {name:'XS',price:1.000,outOfStock:false},
+        { name:'S',price:1.000,outOfStock:false}]},
     {id:8, name:'جهاز تقوية التنفس', price:0.700, image:'products/8.jpg', available: true},
+    {id:9, name:'شارة الكبتن', price:0.700, image:'products/9.jpg', available: true},
+    {id:10, name:'شارة الكبتن', price:0.700, image:'products/10.jpg', available: true},
+    {id:11, name:'مجموعة اربطة المقاومة', price:1.500, image:'products/11.jpg', available: true},
+    {id:12, name:'لف الانكل', price:1.500, image:'products/12.jpg', available: true},
 ];
 
 let cart = [];
