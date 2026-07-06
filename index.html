@@ -53,47 +53,23 @@
 
         button { background: linear-gradient(90deg, var(--primary), #ff1a1a); color: white; border: none; padding: 14px; border-radius: 14px; font-weight: bold; cursor: pointer; }
 
-/* تنسيق بطاقات السلة */
-.cart-item {
-    background: rgba(255, 255, 255, 0.07);
-    padding: 15px;
-    border-radius: 20px;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column; /* جعل المحتوى فوق بعضه في البطاقة */
-    gap: 12px;
-    border: 1px solid var(--glass-border);
-    position: relative;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
+        .cart-item {
+            background: rgba(255, 255, 255, 0.07);
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
 
-/* ترتيب العناصر داخل بطاقة المنتج في السلة */
-.cart-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.cart-item-details strong {
-    display: block;
-    font-size: 1.1rem;
-    color: #fff;
-    margin-bottom: 4px;
-}
-
-.cart-item-details small {
-    color: #aaa;
-    font-size: 0.9rem;
-}
-
-/* شريط التحكم في الكمية والسعر أسفل البطاقة */
-.cart-item-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    padding-top: 10px;
-}        
+        .cart-item-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .cart-item-details strong { display: block; font-size: 1.1rem; color: #fff; margin-bottom: 4px; }
+        .cart-item-details small { color: #aaa; font-size: 0.9rem; }
+        .cart-item-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }        
         .qty-controls { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.2); padding: 5px 8px; border-radius: 50px; border: 1px solid var(--glass-border); }
         .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .btn-min { background: #444; }
@@ -104,26 +80,19 @@
 
         .whatsapp-btn { background: linear-gradient(90deg, #25d366, #128c7e); width: 100%; padding: 18px; animation: pulse 2s infinite; }
 
-        /* تعديلات الجوال المحسنة */
         @media (max-width: 950px) {
             header { padding: 30px 10px; }
             header h1 { font-size: 2.2rem; }
-            
             .container { grid-template-columns: 1fr; padding: 0 15px; }
-            
-            /* المنتجات تظهر أولاً في الجوال */
             .container .glass-card:first-child { order: 1; }
             .container .glass-card:last-child { order: 2; position: static; }
-
             .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .product-item { padding: 12px; border-radius: 18px; }
             .product-item img { height: 140px; }
             .product-item h4 { font-size: 0.9rem; margin: 10px 0; min-height: 40px; }
             .price-tag { font-size: 1.1rem; margin-bottom: 10px; }
-            
             .glass-card { padding: 20px; border-radius: 22px; }
             .section-title { font-size: 1.3rem; }
-            
             button { padding: 12px; font-size: 0.9rem; }
         }
 
@@ -139,52 +108,41 @@
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); display:none; justify-content:center; align-items:center; z-index:9999; }
         .lightbox img { max-width: 90%; max-height: 80%; border-radius: 10px; }
 
-     
-		@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
-		/* رسالة التنبيه التي تظهر في الأسفل */
-#toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--secondary);
-    color: #000;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: bold;
-    box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
-    z-index: 10001;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+        
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--secondary);
+            color: #000;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
+            z-index: 10001;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-#toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-}
-
-/* تأثير اهتزاز خفيف للزر عند الضغط */
-.btn-clicked {
-    transform: scale(0.9);
-    filter: brightness(1.2);
-}
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .btn-clicked { transform: scale(0.9); filter: brightness(1.2); }
     </style>
 </head>
 <body>
 <div id="toast">تمت إضافة المنتج للسلة بنجاح! 🛒</div>
 <header>
     <h1>ELYA SPORT</h1>
-    <div class="badge-sitra">📍 خدمة التوصيل حصرياً لمنطقة سترة</div>
+    <div class="badge-sitra">📍 خدمة التوصيل متوفرة لجميع مناطق البحرين</div>
 </header>
 
 <div class="container">
-    <!-- قسم المنتجات -->
     <div class="glass-card">
         <div class="section-title"><span>🚀</span><span>المنتجات المتاحة</span></div>
         <div id="productList" class="products-grid"></div>
     </div>
 
-    <!-- قسم الحقيبة -->
     <div class="glass-card" style="height: fit-content; position: sticky; top: 20px;">
         <div class="section-title"><span>🛒</span><span>حقيبة التسوق</span></div>
         <div id="cartItems"></div>
@@ -192,6 +150,11 @@
         <div id="discountInfo" style="display:none; justify-content: space-between; color: var(--secondary); font-weight: bold; padding: 10px; background: rgba(0, 210, 255, 0.1); border-radius: 12px; margin-bottom: 10px;">
             <span>خصم الكود:</span>
             <span>-<span id="discountVal">0.000</span> د.ب</span>
+        </div>
+
+        <div id="deliveryPriceInfo" style="display:none; justify-content: space-between; color: var(--accent); font-weight: bold; padding: 10px; background: rgba(255, 215, 0, 0.1); border-radius: 12px; margin-bottom: 10px;">
+            <span>رسوم الاستلام/التوصيل:</span>
+            <span>+<span id="deliveryCostVal">0.000</span> د.ب</span>
         </div>
 
         <div class="total-panel">
@@ -205,10 +168,11 @@
         </div>
 
         <input type="text" id="customerName" placeholder="اسم الزبون الثلاثي">
-        <select id="deliveryMethod" onchange="toggleAreaField()">
+        <select id="deliveryMethod" onchange="handleDeliveryChange()">
             <option value="">-- طريقة الاستلام --</option>
-            <option value="استلام من المتجر">استلام من المتجر</option>
-            <option value="توصيل إلى المنزل">توصيل للمنزل (سترة)</option>
+            <option value="استلام من المتجر" data-cost="0.000">استلام من المتجر (مجانًا)</option>
+            <option value="توصيل للمنزل (سترة)" data-cost="0.200">توصيل للمنزل (سترة) - 0.200 د.ب</option>
+            <option value="توصيل للمنزل (خارج سترة)" data-cost="0.700">توصيل للمنزل (خارج سترة) - 0.700 د.ب</option>
         </select>
 
         <div id="areaContainer" style="display: none;">
@@ -218,6 +182,10 @@
                 <option value="ابو العيش">ابو العيش</option><option value="مركوبان">مركوبان</option>
                 <option value="واديان">واديان</option><option value="الخارجية">الخارجية</option>
             </select>
+        </div>
+
+        <div id="outsideAreaContainer" style="display: none;">
+            <input type="text" id="outsideAreaName" placeholder="اكتب اسم منطقتك">
         </div>
 
         <button class="whatsapp-btn" onclick="sendWhatsApp()">إرسال الطلب للواتساب 📲</button>
@@ -283,12 +251,12 @@ function displayProducts() {
                         </option>
                     `).join('')}
                 </select>` : '<div style="height:55px"></div>'}
-            <button onclick="addToCart(${p.id})" ${!p.available ? 'disabled' : ''}>${p.available ? 'أضف للسلة +' : 'نفدت'}</button>
+            <button onclick="addToCart(${p.id}, event)" ${!p.available ? 'disabled' : ''}>${p.available ? 'أضف للسلة +' : 'نفدت'}</button>
         </div>
     `).join('');
 }
 
-function addToCart(id) {
+function addToCart(id, event) {
     const product = products.find(p => p.id === id);
     if(!product.available) return;
     
@@ -306,14 +274,10 @@ function addToCart(id) {
     
     updateCart();
 
-    // --- إضافة التأثيرات البصرية هنا ---
-    
-    // 1. إظهار رسالة التنبيه (Toast)
     const toast = document.getElementById('toast');
     toast.className = "show";
     setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2500);
 
-    // 2. تأثير الضغط على الزر (تغيير مظهر الزر لحظياً)
     const btn = event.target;
     btn.classList.add('btn-clicked');
     setTimeout(() => { btn.classList.remove('btn-clicked'); }, 200);
@@ -322,6 +286,16 @@ function addToCart(id) {
 function changeQty(i, d) {
     cart[i].qty += d;
     if(cart[i].qty <= 0) cart.splice(i,1);
+    updateCart();
+}
+
+function handleDeliveryChange() {
+    const method = document.getElementById('deliveryMethod').value;
+    
+    // إظهار وإخفاء الحقول بناء على الخيار المطلوب
+    document.getElementById('areaContainer').style.display = (method === 'توصيل للمنزل (سترة)') ? 'block' : 'none';
+    document.getElementById('outsideAreaContainer').style.display = (method === 'توصيل للمنزل (خارج سترة)') ? 'block' : 'none';
+    
     updateCart();
 }
 
@@ -355,28 +329,39 @@ function updateCart() {
         }).join('');
     }
     
-    // تحديث بقية العناصر (الخصم والمجموع) كما هي
     document.getElementById('promoSection').style.display = subtotal >= 3 ? 'block' : 'none';
+    
+    // حساب الخصم على المنتجات فقط
     const disc = subtotal * discountPercent;
     document.getElementById('discountVal').textContent = disc.toFixed(3);
     document.getElementById('discountInfo').style.display = disc > 0 ? 'flex' : 'none';
-    document.getElementById('totalPrice').textContent = (subtotal - disc).toFixed(3);
-}
+    
+    // جلب تكلفة التوصيل
+    const deliverySelect = document.getElementById('deliveryMethod');
+    const selectedOption = deliverySelect.options[deliverySelect.selectedIndex];
+    const deliveryCost = selectedOption && selectedOption.dataset.cost ? parseFloat(selectedOption.dataset.cost) : 0;
+    
+    if (deliveryCost > 0) {
+        document.getElementById('deliveryCostVal').textContent = deliveryCost.toFixed(3);
+        document.getElementById('deliveryPriceInfo').style.display = 'flex';
+    } else {
+        document.getElementById('deliveryPriceInfo').style.display = 'none';
+    }
 
+    // حساب المجموع النهائي: المنتجات - الخصم + رسوم التوصيل الثابتة
+    const finalTotal = (subtotal - disc) + deliveryCost;
+    document.getElementById('totalPrice').textContent = finalTotal.toFixed(3);
+}
 
 function applyDiscount() {
     const code = document.getElementById('promoCode').value.trim().toUpperCase();
     
-    // تعريف الأكواد ونسبة الخصم (0.10 تعني 10%)
-
- if (code === "SP03") {
+    if (code === "SP03") {
         discountPercent = 0.15;
         alert("تم تفعيل خصم 15% بنجاح! 🎉");    
-        
     } else if (code === "SP08") {
         discountPercent = 0.20;
         alert("تم تفعيل خصم 20% بنجاح! 🎉"); 
-
     } else if (code === "") {
         alert("يرجى إدخال كود الخصم");
         return;
@@ -385,7 +370,7 @@ function applyDiscount() {
         discountPercent = 0;
     }
     
-    updateCart(); // تحديث السلة لإظهار السعر الجديد بعد الخصم
+    updateCart();
 }
 
 function openRatingPage() {
@@ -407,19 +392,25 @@ function openRatingPage() {
     `).join('');
     document.getElementById('ratingPage').style.display = 'flex';
 }
-// --- استبدل دالة sendWhatsApp بهذه الدالة المحدثة ---
 
 function sendWhatsApp() {
   const name = document.getElementById('customerName').value.trim();
   const method = document.getElementById('deliveryMethod').value;
-  const area = document.getElementById('customerArea').value;
+  
+  let area = '';
+  if (method === 'توصيل للمنزل (سترة)') {
+      area = document.getElementById('customerArea').value;
+      if(!area) return alert('يرجى تحديد المنطقة داخل سترة');
+  } else if (method === 'توصيل للمنزل (خارج سترة)') {
+      area = document.getElementById('outsideAreaName').value.trim();
+      if(!area) return alert('رجاءً، اكتب اسم المنطقة الخاصة بك');
+  }
   
   if(!cart.length || !name || !method) return alert('يرجى إكمال جميع البيانات (الاسم وطريقة الاستلام)');
 
   lastPurchasedItems = [...cart];
   localStorage.setItem('lastOrder', JSON.stringify(lastPurchasedItems));
 
-  // بداية الرسالة بتنسيق جميل
   let msg = `✨ *طلب شراء جديد - ELYA SPORT* ✨\n\n`;
   msg += `👤 *الزبون:* ${name}\n`;
   msg += `📍 *الاستلام:* ${method} ${area ? '⬅️ ' + area : ''}\n`;
@@ -437,21 +428,26 @@ function sendWhatsApp() {
 
   msg += `───━━━━─━━━━───\n`;
   
-  // الخصم إن وجد
   const disc = parseFloat(document.getElementById('discountVal').textContent);
   if(disc > 0) {
     msg += `🧧 خصم الكود: -${disc.toFixed(3)} د.ب\n`;
   }
 
-  // المجموع النهائي
+  const deliverySelect = document.getElementById('deliveryMethod');
+  const selectedOption = deliverySelect.options[deliverySelect.selectedIndex];
+  const deliveryCost = selectedOption && selectedOption.dataset.cost ? parseFloat(selectedOption.dataset.cost) : 0;
+  if(deliveryCost > 0) {
+    msg += `🚚 رسوم التوصيل: +${deliveryCost.toFixed(3)} د.ب\n`;
+  }
+
   msg += `💵 *المجموع النهائي: ${document.getElementById('totalPrice').textContent} د.ب*\n\n`;
   
-  // الخاتمة المطلوبة
   msg += `⚠️ *يرجى التقييم بعد الاستلام عبر الضغط على زر (⭐) في الموقع*\n`;
   msg += `شكراً لثقتكم بـ ايليا سبورت! ❤️`;
 
   window.open(`https://wa.me/97339711178?text=${encodeURIComponent(msg)}`);
 }
+
 function sendReview() {
     const items = JSON.parse(localStorage.getItem('lastOrder')) || [];
     let report = `*تقييم مشتريات ELYA SPORT*\n`;
@@ -466,7 +462,6 @@ function sendReview() {
 }
 
 function closeRatingPage() { document.getElementById('ratingPage').style.display = 'none'; }
-function toggleAreaField() { document.getElementById('areaContainer').style.display = document.getElementById('deliveryMethod').value === 'توصيل إلى المنزل' ? 'block' : 'none'; }
 function openLightbox(u) { document.getElementById('lightboxImg').src=u; document.getElementById('lightbox').style.display='flex'; }
 function clearCart() { if(confirm('مسح؟')) { cart=[]; updateCart(); } }
 
